@@ -2,11 +2,12 @@ import { nanoid } from 'nanoid';
 import css from './FormUser.module.css';
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { addContactAction } from 'store/contacts/contactsSlice';
+import { addContactThunk } from 'store/thunks';
 
 const FormUser = () => {
   
     const { contacts } = useSelector((state) => state.contacts)
+
     
     const  [name, setName]  = useState('')
     const [number, setNumber] = useState('')
@@ -18,7 +19,7 @@ const FormUser = () => {
             alert(data.name + " is already in contacts")
             return;
         }
-        dispatch(addContactAction(data))
+        dispatch(addContactThunk(data))
     }
    
     const handleChange = ({ target: { name, value } }) => {

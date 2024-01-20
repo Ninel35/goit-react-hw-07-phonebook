@@ -1,33 +1,41 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getContacts } from "api/fetchContacts";
+import { createSlice } from "@reduxjs/toolkit";
+import { addContactThunk, getContactsThunk } from "store/thunks";
 
 
-export const fetchContacts = createAsyncThunk('contacts/getContacts', async () => {
-    const data = await getContacts()
-    return data
-})
+const handlePending = (state) => {
+    state.loading = true
+            state.error = ''
+}
+const handleRejected = (state, {error}) => {
+         state.loading = false
+            state.error = error.message
+}
+const handleFulfilled = (state) => {
+        state.loading = false
+}
+
   
 const contactsSlice = createSlice({
     name: 'contacts',
     initialState: {
-            contacts: [],
-            loading: false,
-            error: ''
+        contacts: [],
+        loading: false,
+        error: '',
+        contact: null
+            
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchContacts.pending, (state) => {
-            state.loading = true
-            state.error = ''
+            .addCase(getContactsThunk.fulfilled, (state, { payload }) => {
+                state.contacts = payload
             })
-        .addCase(fetchContacts.fulfilled, (state, {payload}) => {
-            state.loading = false
-            state.contacts = payload
-        })
-        .addCase(fetchContacts.rejected, (state, {error}) => {
-            state.loading = false
-            state.error = error.message
-        })
+            .addCase(addContactThunk.fulfilled, (state, { payload }) => {
+                state.contact = payload
+            })
+            .addMatcher((action) => action.type.endsWith('/pending'), handlePending)
+            .addMatcher((action) => action.type.endsWith('/rejected'), handleRejected)
+            .addMatcher((action) => action.type.endsWith('/fulfilled'), handleFulfilled)
+        
     },
     reducers: {
         addContactAction: (state, { payload }) => {

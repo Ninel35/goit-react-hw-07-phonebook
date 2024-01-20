@@ -1,6 +1,11 @@
 import { api } from "./api"
 
-export const getContacts = async () => {
+export const fetchContacts = async () => {
     const {data} = await api(`contacts`)
+    return data
+}
+
+export const addContact = async (body) => {
+    const {data} = await api.post(`contacts`, body)
     return data
 }
