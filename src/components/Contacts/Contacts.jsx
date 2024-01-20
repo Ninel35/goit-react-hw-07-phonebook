@@ -1,13 +1,17 @@
 import ElementContact from "components/ElementContact/ElementContact";
 import css from './Contacts.module.css'
 import { useDispatch, useSelector } from "react-redux";
-import { deleteContactsAction } from "store/contacts/contactsSlice";
-import React from 'react'
+import { deleteContactsAction, fetchContacts } from "store/contacts/contactsSlice";
+import React, { useEffect } from 'react'
 
 const Contacts = () => {
     const { filter } = useSelector((state) => state.filter)
-    const { contacts } = useSelector((state) => state.contacts)
+    const { contacts, loading, error } = useSelector((state) => state.contacts)
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(fetchContacts())
+    }, [dispatch])
 
     const handleDelete = (evt) => {
         dispatch(deleteContactsAction(evt.target.parentElement.id))
@@ -24,6 +28,8 @@ const Contacts = () => {
 
     return (
         <>
+            {loading && <h2>Loading...</h2>}
+            {error&& <h2>{error}</h2>}
             <ul>
                 {
                     getVisibleContacts().map((contact) => (

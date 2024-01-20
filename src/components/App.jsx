@@ -3,7 +3,7 @@ import './../store/store.js'
 import React from 'react'
 import Filter from './Filter/Filter'
 import Contacts from './Contacts/Contacts'
-import FormUser  from './FormUser/FormUser'
+import FormUser from './FormUser/FormUser'
 
 
 

@@ -1,4 +1,4 @@
-const ElementContact = ({contact, children}) => {
+const ElementContact = ({ contact, children }) => {
     return (
         <li id={contact.id} > {contact.name}   {contact.number}
            {children}

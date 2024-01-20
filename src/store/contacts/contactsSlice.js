@@ -1,12 +1,34 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getContacts } from "api/fetchContacts";
 
-const initialState = {
-    contacts: []
-}
+
+export const fetchContacts = createAsyncThunk('contacts/getContacts', async () => {
+    const data = await getContacts()
+    return data
+})
   
 const contactsSlice = createSlice({
     name: 'contacts',
-    initialState,
+    initialState: {
+            contacts: [],
+            loading: false,
+            error: ''
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchContacts.pending, (state) => {
+            state.loading = true
+            state.error = ''
+            })
+        .addCase(fetchContacts.fulfilled, (state, {payload}) => {
+            state.loading = false
+            state.contacts = payload
+        })
+        .addCase(fetchContacts.rejected, (state, {error}) => {
+            state.loading = false
+            state.error = error.message
+        })
+    },
     reducers: {
         addContactAction: (state, { payload }) => {
             return {
@@ -20,7 +42,6 @@ const contactsSlice = createSlice({
         }
         
     }
-    
 })
 
 export const contactsReducer = contactsSlice.reducer
