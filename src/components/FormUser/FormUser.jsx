@@ -3,10 +3,12 @@ import css from './FormUser.module.css';
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { addContactThunk } from 'store/thunks';
+import { selectorContacts } from 'store/selectors';
+
 
 const FormUser = () => {
   
-    const { contacts } = useSelector((state) => state.contacts)
+    const contacts = useSelector(selectorContacts)
 
     
     const  [name, setName]  = useState('')
